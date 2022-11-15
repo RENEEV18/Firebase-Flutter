@@ -108,18 +108,24 @@ class LoginScreen extends StatelessWidget {
               kSize,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
+                children: [
                   BottomButton(
+                    onTap: () {
+                      googleSignin(authProvider, context);
+                    },
                     image: 'assets/images/google_PNG19635.png',
-                    text: Text(
+                    text: const Text(
                       'Sign in with Google',
                     ),
                     color: kGoogle,
                   ),
                   BottomButton(
+                    onTap: () {
+                      appleSignin(authProvider, context);
+                    },
                     image:
                         'assets/images/PNGPIX-COM-Apple-Grey-Logo-PNG-Transparent.png',
-                    text: Text(
+                    text: const Text(
                       'Sign in with Apple',
                       style: TextStyle(color: kWhite),
                     ),
@@ -150,6 +156,42 @@ class LoginScreen extends StatelessWidget {
 
   void signIn(AuthenticateProvider provider, context) async {
     final message = await provider.signIn(email.text, password.text);
+    if (message == '') {
+      return;
+    } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            style: const TextStyle(color: kRed),
+          ),
+          backgroundColor: kBlack,
+        ),
+      );
+    }
+  }
+
+  void googleSignin(AuthenticateProvider provider, context) async {
+    final message = await provider.googleSignin();
+    if (message == '') {
+      return;
+    } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            style: const TextStyle(color: kRed),
+          ),
+          backgroundColor: kBlack,
+        ),
+      );
+    }
+  }
+
+  void appleSignin(AuthenticateProvider provider, context) async {
+    final message = await provider.appleSignin();
     if (message == '') {
       return;
     } else {

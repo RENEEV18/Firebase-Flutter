@@ -4,7 +4,6 @@ import 'package:firebase_project/core/constant/const.dart';
 import 'package:firebase_project/view/home/home.dart';
 import 'package:firebase_project/view/log_in_screen/login.dart';
 import 'package:firebase_project/widgets/bottom_button.dart';
-import 'package:firebase_project/widgets/clippath_top.dart';
 import 'package:firebase_project/widgets/signin_button.dart';
 import 'package:firebase_project/widgets/row_divider.dart';
 import 'package:firebase_project/widgets/textfiled.dart';
@@ -33,9 +32,10 @@ class RegisterScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  kSize,
                   Image.asset(
                     'assets/images/task-registration-2081679-1756042.png',
-                    width: 300,
+                    width: 230,
                   ),
                   Image.asset(
                     'assets/images/firebase-1-282796.png',
@@ -130,6 +130,42 @@ class RegisterScreen extends StatelessWidget {
     final message = await provider.signUp(email.text, password.text);
     if (message == '') {
       return;
+    } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            style: const TextStyle(color: kRed),
+          ),
+          backgroundColor: kBlack,
+        ),
+      );
+    }
+  }
+
+    void googleSignup(AuthenticateProvider provider, context) async {
+    final message = await provider.googleSignup();
+    if (message == '') {
+      return;
+    } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            style: const TextStyle(color: kRed),
+          ),
+          backgroundColor: kBlack,
+        ),
+      );
+    }
+  }
+
+   void appleSignup(AuthenticateProvider provider, context) async {
+    final message = await provider.appleSignup();
+    if (message == '') {
+      return;  
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(

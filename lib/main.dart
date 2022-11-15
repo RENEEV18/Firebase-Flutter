@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_project/controller/providers/firebase_login_auth.dart';
+import 'package:firebase_project/controller/providers/profile.dart';
 import 'package:firebase_project/view/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
             create: (_) => AuthenticateProvider(FirebaseAuth.instance)),
         StreamProvider(
             create: (context) => context.watch<AuthenticateProvider>().user(),
-            initialData: null)
+            initialData: null),
+            ChangeNotifierProvider(create: (_)=> ProfileProvider(),),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

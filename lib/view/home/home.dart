@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_project/controller/providers/firebase_login_auth.dart';
 import 'package:firebase_project/core/constant/const.dart';
 import 'package:firebase_project/view/log_in_screen/login.dart';
+import 'package:firebase_project/view/user_profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +38,15 @@ class HomeScreen extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const UserProfileScreen();
+                        },
+                      ),
+                    );
+                  },
                   icon: const Icon(
                     Icons.person_pin,
                     color: kWhite,
