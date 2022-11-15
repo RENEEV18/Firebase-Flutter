@@ -2,12 +2,15 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_project/view/log_in_screen/login.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileProvider extends ChangeNotifier {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
 
   File? image;
@@ -22,63 +25,45 @@ class ProfileProvider extends ChangeNotifier {
     } else {
       final imageTemp = File(imgPicker.path);
       image = imageTemp;
-     
+      if (image != null) {
+        uploadPick();
+      }
       notifyListeners();
-      uploadPick();
+
       log('image picked');
     }
   }
 
-  Future<void> uploadPick() async {
-    Reference reference = FirebaseStorage.instance.ref().child('test');
-    await reference.putFile(image!);
-    notifyListeners();
+  Future<void> signOut(context) async {
+    await auth.signOut();
+    downloadUrl = '';
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
+        (route) => false);
   }
 
-  // Future<void> uploadPick() async {
-
-  //   if(image == null){
-  //     return;
-  //   }
-  //   final fileName = DateTime.now().microsecondsSinceEpoch.toString();
-
-  //     Reference reference = FirebaseStorage.instance.ref();
-  //      Reference referenceImagedir = reference.child('test');
-  //      Reference referenceImagetoUplad = referenceImagedir.child(fileName);
-  //      try{
-  //        await referenceImagetoUplad.putFile(image!);
-  //       downloadUrl = await referenceImagetoUplad.getDownloadURL();
-  //       notifyListeners();
-  //      } on FirebaseException catch(e){
-  //       log(e.message.toString());
-  //      }
-
-  // }
-
-  void getProfileImage() async {
+  Future<void> uploadPick() async {
     try {
-      isImageLoading = true;
-      notifyListeners();
       Reference reference =
-          FirebaseStorage.instance.ref().child('test');
-      downloadUrl = await reference.getDownloadURL();
-      isImageLoading = false;
+          storage.ref().child('${auth.currentUser!.email}/images');
+      reference.putFile(image!);
       notifyListeners();
-      log(downloadUrl);
     } catch (e) {
-      isImageLoading = false;
-      notifyListeners();
       log(e.toString());
     }
   }
 
-  // Future<void> editBut(String user,)async{
-  //    if (image != null) {
-  //       isImageLoading = true;
-  //       notifyListeners();
-  //       await uploadPick();
-  //     } else {
-  //       log('not called');
-  //     }
-  // }
+  void getProfileImage() async {
+    try {
+      Reference reference =
+          storage.ref().child('${auth.currentUser!.email}/images');
+      downloadUrl = await reference.getDownloadURL();
+      notifyListeners();
+      log(downloadUrl);
+    } catch (e) {
+      log('getImageException${e.toString()}');
+    }
+  }
 }

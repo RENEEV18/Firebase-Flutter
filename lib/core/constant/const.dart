@@ -11,6 +11,9 @@ const kSize = SizedBox(height: 20,);
 const kBottomSize = SizedBox(height: 10,);
 const kWidth =SizedBox(width: 20,);
 
+
+const kBaseUrl = "https://jsonplaceholder.typicode.com/users";
+
 //// colors////////////
 const kGrey = Colors.grey;
 const kRed = Colors.red;
@@ -19,3 +22,17 @@ const kGoogle = Color.fromARGB(34, 0, 0, 0);
 const kWhite = Colors.white;
 const kBlue = Colors.blue;
 const kProfile = Color.fromARGB(242, 190, 216, 247);
+
+// list of image vectors
+final List<String> imageUrl = [
+  "https://reqres.in/img/faces/7-image.jpg",
+  "https://reqres.in/img/faces/8-image.jpg",
+  "https://reqres.in/img/faces/8-image.jpg",
+  "https://reqres.in/img/faces/11-image.jpg",
+  "https://reqres.in/img/faces/12-image.jpg",
+  "https://reqres.in/img/faces/7-image.jpg",
+  "https://reqres.in/img/faces/8-image.jpg",
+  "https://reqres.in/img/faces/8-image.jpg",
+  "https://reqres.in/img/faces/11-image.jpg",
+  "https://reqres.in/img/faces/12-image.jpg",
+];

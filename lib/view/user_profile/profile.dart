@@ -14,9 +14,9 @@ class UserProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<AuthenticateProvider>(context, listen: false);
-    // WidgetsBinding.instance.addPostFrameCallback((_){
-    //   Provider.of<ProfileProvider>(context,listen: false).getProfileImage();
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ProfileProvider>(context, listen: false).getProfileImage();
+    });
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -33,9 +33,16 @@ class UserProfileScreen extends StatelessWidget {
             Icons.arrow_back,
           ),
         ),
-        actions: const [
-          Icon(
-            Icons.notifications_active,
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.read<ProfileProvider>().signOut(context);
+            },
+            icon: const Icon(
+              Icons.logout_rounded,
+              color: kBlack,
+              size: 28,
+            ),
           ),
           kWidth,
         ],
@@ -52,11 +59,18 @@ class UserProfileScreen extends StatelessWidget {
                       return Stack(
                         children: [
                           value.image == null
-                              ? const CircleAvatar(
-                                  radius: 60,
-                                  backgroundColor: kBlack,
-                                  child: Icon(Icons.photo),
-                                )
+                              ? value.downloadUrl.isEmpty
+                                  ? const CircleAvatar(
+                                      radius: 60,
+                                      backgroundColor: kBlack,
+                                      child: Icon(Icons.photo),
+                                    )
+                                  : CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        value.downloadUrl,
+                                      ),
+                                      radius: 60,
+                                    )
                               : CircleAvatar(
                                   radius: 60,
                                   backgroundImage: FileImage(
@@ -75,7 +89,7 @@ class UserProfileScreen extends StatelessWidget {
                               child: IconButton(
                                   onPressed: () async {
                                     value.getImage(ImageSource.gallery);
-                                   // value.uploadPick(ImageSource.gallery);
+
                                     Navigator.of(context).pop();
                                   },
                                   icon: const Icon(Icons.edit)),
@@ -123,9 +137,6 @@ class UserProfileScreen extends StatelessWidget {
               kSize,
               Column(
                 children: [
-                  Text(
-                    data.auth.currentUser!.displayName.toString(),
-                  ),
                   Text(
                     data.auth.currentUser!.email.toString(),
                   ),

@@ -13,14 +13,10 @@ class AuthenticateProvider extends ChangeNotifier {
 // get current user//
 
 // Stream<String> get o()async{
-  
+
 // }
 
   bool get loading => isLoading;
-
-  Future<void> signOut() async {
-    await auth.signOut();
-  }
 
   Future<String> signIn(String email, String password) async {
     try {
@@ -28,7 +24,7 @@ class AuthenticateProvider extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
       ////////////////////////////////
-      
+
       await auth.signInWithEmailAndPassword(
           email: email.trim(), password: password.trim());
       isLoading = false;

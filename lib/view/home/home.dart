@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_project/controller/providers/api_provider.dart';
 import 'package:firebase_project/controller/providers/firebase_login_auth.dart';
 import 'package:firebase_project/core/constant/const.dart';
 import 'package:firebase_project/view/log_in_screen/login.dart';
@@ -11,6 +12,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ApiProvider>(context, listen: false).listofUsers();
+    });
     return StreamBuilder<User?>(
         stream: context.watch<AuthenticateProvider>().user(),
         builder: (context, user) {
@@ -19,21 +23,15 @@ class HomeScreen extends StatelessWidget {
           }
           return Scaffold(
             appBar: AppBar(
+              leading: const Icon(
+                Icons.menu_rounded,
+                color: kWhite,
+              ),
               backgroundColor: kBlue,
               title: Center(
                 child: Text(
                   'welcome'.toUpperCase(),
                   style: kAppbarTitle,
-                ),
-              ),
-              leading: IconButton(
-                onPressed: () {
-                  context.read<AuthenticateProvider>().signOut();
-                },
-                icon: const Icon(
-                  Icons.logout_rounded,
-                  color: kWhite,
-                  size: 28,
                 ),
               ),
               actions: [
@@ -54,6 +52,54 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            body: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Consumer<ApiProvider>(
+                builder: (context, value, child) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Row(
+                          children: [
+                            const Icon(
+                              Icons.verified,
+                              color: Colors.blue,
+                            ),
+                            Text(
+                              value.userList[index].name,
+                              style: const TextStyle(
+                                  color: kBlack, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        subtitle: Row(
+                          children: [
+                            const SizedBox(
+                              width: 24,
+                            ),
+                            Text(
+                              value.userList[index].email,
+                              style: const TextStyle(
+                                  color: kBlack, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(imageUrl[index]),
+                        ),
+                        trailing: const Icon(
+                          Icons.business_center_outlined,
+                          color: kBlack,
+                        ),
+                      );
+                    },
+                    itemCount: 10,
+                  );
+                },
+              ),
             ),
           );
         });

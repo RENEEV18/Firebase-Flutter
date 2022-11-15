@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_project/controller/providers/api_provider.dart';
 import 'package:firebase_project/controller/providers/firebase_login_auth.dart';
 import 'package:firebase_project/controller/providers/profile.dart';
 import 'package:firebase_project/view/home/home.dart';
@@ -24,7 +25,12 @@ class MyApp extends StatelessWidget {
         StreamProvider(
             create: (context) => context.watch<AuthenticateProvider>().user(),
             initialData: null),
-            ChangeNotifierProvider(create: (_)=> ProfileProvider(),),
+        ChangeNotifierProvider(
+          create: (_) => ProfileProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ApiProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -33,7 +39,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: const HomeScreen(),
-       // home: const RegisterScreen(),
+        // home: const RegisterScreen(),
       ),
     );
   }
